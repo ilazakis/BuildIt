@@ -1,14 +1,19 @@
 
 import Foundation
 
+// MARK: - Convenience Constants
+
 /// HTTP Method enumeration.
 public enum HttpMethod: String {
     case GET, POST, PUT, DELETE
 }
 
-//
-private let HTTP = "http"
-private let HTTPS = "https"
+/// Schemes.
+public enum Scheme: String {
+    case http, https
+}
+
+// MARK: - Request builder
 
 /// Request Builder.
 ///
@@ -21,16 +26,25 @@ public class RequestBuilder {
     
     private var url: URL?
     
-    private var scheme = HTTP
+    private var scheme = Scheme.http.rawValue
     
-    fileprivate var httpMethod = HttpMethod.GET
+    fileprivate var httpMethod = HttpMethod.GET.rawValue
     
     private var httpHeaders: [String: String] = [:]
+    
+    // MARK: - Initialization
+    
+    public required init() {}
     
     // MARK: - API
     
     // MARK: - URL
+    
+    /// Sets the request URL.
     ///
+    /// - parameter url: The URL.
+    ///
+    /// - returns: The builder instance.
     public func url(_ url: URL) -> RequestBuilder {
         self.url = url
         return self
@@ -80,22 +94,22 @@ public class RequestBuilder {
     ///
     /// - returns: The builder instance.
     public func http() -> RequestBuilder {
-        return scheme("http")
+        return scheme(Scheme.http.rawValue)
     }
 
     /// Secure http.
     ///
     /// - returns: The builder instance.
     public func https() -> RequestBuilder {
-        return scheme("https")
+        return scheme(Scheme.https.rawValue)
     }
     
     // MARK: - HTTP Headers
     
-    /// <#Description#>
+    /// Sets a value-HTTP header pair.
     ///
-    /// - parameter value: <#value description#>
-    /// - parameter field: <#field description#>
+    /// - parameter value: The value to use for the header.
+    /// - parameter field: The header for which the value is being changed.
     public func setValue(_ value: String?,
                          for headerField: String) -> RequestBuilder {
         self.httpHeaders[headerField] = value
@@ -119,7 +133,7 @@ public class RequestBuilder {
         
         //
         var request = URLRequest(url: (components?.url)!)
-        request.httpMethod = httpMethod.rawValue
+        request.httpMethod = httpMethod
         request.allHTTPHeaderFields = httpHeaders
         
         return request
@@ -134,7 +148,7 @@ fileprivate extension RequestBuilder {
     ///
     /// - returns: The builder instnce.
     fileprivate func method(_ httpMethod: HttpMethod) -> RequestBuilder {
-        self.httpMethod = httpMethod
+        self.httpMethod = httpMethod.rawValue
         return self
     }
 }
