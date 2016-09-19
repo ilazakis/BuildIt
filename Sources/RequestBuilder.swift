@@ -17,16 +17,20 @@ public enum Scheme: String {
 
 /// Request Builder.
 ///
-/// - Note: Defaults to GET
+/// - Note: Defaults to GET, https.
 ///
-/// A vanilla GOF implementation of the `Builder`
+/// Vanilla implementation of the GOF `Builder` Design Pattern for `URLRequest` instances.
 public class RequestBuilder {
 
     // MARK: - Private variables
     
     private var url: URL?
     
-    private var scheme = Scheme.http.rawValue
+    private var host: String?
+    
+    private var path: String?
+    
+    private var scheme = Scheme.https.rawValue
     
     fileprivate var httpMethod = HttpMethod.GET.rawValue
     
@@ -137,6 +141,35 @@ public class RequestBuilder {
         return self
     }
     
+    // MARK: - Host
+    
+    
+    /// The host subcomponent.
+    ///
+    /// - parameter name: The host name e.g. `api.somehost.com`
+    ///
+    /// - returns: The builder instance.
+    public func host(_ name: String) -> RequestBuilder {
+        host = name
+        return self
+    }
+    
+    // MARK: - Path
+    
+    
+    /// The path subcomponent.
+    ///
+    /// - Note: You can omit the prefixing forward slash i.e.
+    ///   `some/path` and `/some/path` will both be respected.
+    ///
+    /// - parameter name: The path name e.g. "some/path/to/a/resource"
+    ///
+    /// - returns: The builder instance.
+    public func path(_ name: String) -> RequestBuilder {
+        path = name
+        return self
+    }
+    
     // MARK: - Build method.
     
     /// The build method.
@@ -146,21 +179,37 @@ public class RequestBuilder {
     /// - returns: A fully initialized `URLRequest` instance 
     ///            or nil if initialization failed.
     public func build() -> URLRequest? {
-        guard url != nil else { return nil }
         
-        //
-        var components = URLComponents(url: url!, resolvingAgainstBaseURL: false)
-        components?.scheme = scheme
+        // Use a URL if one was provided by the client.
+        var components: URLComponents?
+        if url != nil {
+            components = URLComponents(url: url!, resolvingAgainstBaseURL: false)
+        }
+        else { // else try to build one from `scheme`, `host` and `path`
+            components = URLComponents()
+            components?.host = host
+            components?.scheme = scheme
+            if path == nil {
+                components?.path = ""
+            }
+            else {
+                components?.path = path!.hasPrefix("/") ? path! : "/" + path!
+            }
+        }
+        
+        // Append any potential queries
         components?.queryItems = queryItems.isEmpty ? nil : queryItems
         
-        //
+        // By this point, we must have request.
+        guard components?.url != nil else { return nil }
         var request = URLRequest(url: (components?.url)!)
         request.httpMethod = httpMethod
         request.allHTTPHeaderFields = httpHeaders
-        
         return request
     }
 }
+
+// MARK: - Extension(s)
 
 fileprivate extension RequestBuilder {
 

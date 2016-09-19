@@ -46,7 +46,7 @@ class RequestBuilderTests: XCTestCase {
     func testRequestPUTAndHeaders() {
         
         // GIVEN
-        let url = URL(string: "http://apple.com")
+        let url = URL(string: "https://apple.com")
         var expectedRequest = URLRequest(url: url!)
         expectedRequest.httpMethod = "PUT"
         expectedRequest.setValue("Some token", forHTTPHeaderField: "Authorization")
@@ -89,6 +89,19 @@ class RequestBuilderTests: XCTestCase {
                         .url(URL(string: "http://api.somehost.com/test.json")!)
                         .query(name: "someQuery", value: "")
                         .build()
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testHostAndPath() {
+        
+        // GIVEN
+        let url = URL(string: "https://api.somehost.com/some/path")
+        let expectedRequest = URLRequest(url: url!)
+        
+        // WHEN
+        let request = builder.host("api.somehost.com").path("some/path").build()
+        
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
