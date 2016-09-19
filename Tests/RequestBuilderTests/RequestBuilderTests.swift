@@ -1,6 +1,6 @@
 import XCTest
-@testable import RequestBuilder
 import Foundation
+@testable import RequestBuilder
 
 class RequestBuilderTests: XCTestCase {
     
@@ -15,7 +15,7 @@ class RequestBuilderTests: XCTestCase {
         
     }
     
-    func testRequestGET() {
+    func testRequestDefaultsToGET() {
         
         // GIVEN
         let url = URL(string: "http://apple.com")
@@ -59,12 +59,45 @@ class RequestBuilderTests: XCTestCase {
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
+    
+    func testRequestGETWithHeadersAndQueries() {
+        
+        // GIVEN
+        let url = URL(string: "http://api.somehost.com/user_timeline.json?screen_name=cocoapatterns&include_rts=true")
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.setValue("Some token", forHTTPHeaderField: "Authorization")
+        
+        // WHEN
+        let request = builder.GET()
+                        .url(URL(string: "http://api.somehost.com/user_timeline.json")!)
+                        .setValue("Some token", for: "Authorization")
+                        .query(name: "screen_name", value: "cocoapatterns")
+                        .query(name: "include_rts", value: "true")
+                        .build()
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testRequestGETWithEmptyQuery() {
+        
+        // GIVEN
+        let url = URL(string: "http://api.somehost.com/test.json?someQuery=")
+        let expectedRequest = URLRequest(url: url!)
+    
+        // WHEN
+        let request = builder.GET()
+                        .url(URL(string: "http://api.somehost.com/test.json")!)
+                        .query(name: "someQuery", value: "")
+                        .build()
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
 
     // MARK: - Linux
     
     static var allTests : [(String, (RequestBuilderTests) -> () throws -> Void)] {
         return [
-            ("testRequestGET", testRequestGET), ("testRequestPOST", testRequestPOST)
+            ("testRequestDefaultsToGET", testRequestDefaultsToGET), ("testRequestPOST", testRequestPOST)
         ]
     }
 }

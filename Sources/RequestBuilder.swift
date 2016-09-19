@@ -32,6 +32,8 @@ public class RequestBuilder {
     
     private var httpHeaders: [String: String] = [:]
     
+    private var queryItems: [URLQueryItem] = []
+    
     // MARK: - Initialization
     
     public required init() {}
@@ -110,9 +112,28 @@ public class RequestBuilder {
     ///
     /// - parameter value: The value to use for the header.
     /// - parameter field: The header for which the value is being changed.
-    public func setValue(_ value: String?,
-                         for headerField: String) -> RequestBuilder {
+    /// - returns: The builder instance.
+    public func setValue(_ value: String?, for headerField: String) -> RequestBuilder {
         self.httpHeaders[headerField] = value
+        return self
+    }
+    
+    // MARK: - Queries
+    
+    /// Adds a query key-value pair to the request.
+    ///
+    /// - note: This method maps the passed key-value pair
+    ///   to a `URLQueryItem` so expect the same behaviors for
+    ///   edge cases as the ones described for `NSURLComponenent`'s
+    ///   `queryItems` array.
+    ///
+    /// - parameter name:   The query name e.g. `username`.
+    /// - parameter value: The quey value e.g. `Joakim`.
+    ///
+    /// - returns: The builder instance.
+    public func query(name: String, value: String) -> RequestBuilder {
+        let query = URLQueryItem(name: name, value: value)
+        queryItems.append(query)
         return self
     }
     
@@ -130,6 +151,7 @@ public class RequestBuilder {
         //
         var components = URLComponents(url: url!, resolvingAgainstBaseURL: false)
         components?.scheme = scheme
+        components?.queryItems = queryItems.isEmpty ? nil : queryItems
         
         //
         var request = URLRequest(url: (components?.url)!)
