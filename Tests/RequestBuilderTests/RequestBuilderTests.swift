@@ -105,6 +105,23 @@ class RequestBuilderTests: XCTestCase {
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
+    
+    func testHeaderWithMultipleValues() {
+        
+        // GIVEN
+        let url = URL(string: "https://api.somehost.com/some/path")
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.setValue("text/html,application/xhtml+xml", forHTTPHeaderField: "Accept")
+        
+        // WHEN
+        let request = builder
+                        .host("api.somehost.com")
+                        .path("some/path")
+                        .setValue("text/html", for: "Accept")
+                        .setValue("application/xhtml+xml", for: "Accept").build()
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
 
     // MARK: - Linux
     

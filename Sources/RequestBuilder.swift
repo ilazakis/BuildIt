@@ -117,8 +117,9 @@ public class RequestBuilder {
     /// - parameter value: The value to use for the header.
     /// - parameter field: The header for which the value is being changed.
     /// - returns: The builder instance.
-    public func setValue(_ value: String?, for headerField: String) -> RequestBuilder {
-        self.httpHeaders[headerField] = value
+    public func setValue(_ value: String, for headerField: String) -> RequestBuilder {
+        let existingValue = self.httpHeaders[headerField]
+        self.httpHeaders[headerField] = existingValue == nil ? value : existingValue! + "," + value
         return self
     }
     
