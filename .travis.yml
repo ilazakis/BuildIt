@@ -1,4 +1,4 @@
-cript:
+script:
   - swift build
   - .build/Debug/UnitTests
 osx_image: xcode8
