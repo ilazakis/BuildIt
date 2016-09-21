@@ -1,6 +1,9 @@
-[![Build Status](https://travis-ci.org/ilazakis/BuildIt.svg?branch=master)](https://travis-ci.org/ilazakis/BuildIt)
+# BuildIt
 
-# Request Builder
+[![Build Status](https://travis-ci.org/ilazakis/BuildIt.svg?branch=master)](https://travis-ci.org/ilazakis/BuildIt)
+[![Twitter](https://img.shields.io/badge/twitter-buildit-blue.svg?style=flat)](http://twitter.com/cocoapoatterns)
+
+
 [GOF's Builder](https://en.wikipedia.org/wiki/Builder_pattern) implementation for Cocoa's [URLRequest](https://developer.apple.com/reference/foundation/urlrequest) in Swift.
 
 Request builder leverages the [URLComponents](https://developer.apple.com/reference/foundation/urlcomponents) structure and exposes a lightweight and easy to use API for URLRequest construction.
