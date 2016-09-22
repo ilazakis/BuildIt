@@ -202,8 +202,8 @@ public class RequestBuilder {
         components?.queryItems = queryItems.isEmpty ? nil : queryItems
         
         // By this point, we must have request.
-        guard components?.url != nil else { return nil }
-        var request = URLRequest(url: (components?.url)!)
+        guard let url = components?.url else { return nil }
+        var request = URLRequest(url: url)
         request.httpMethod = httpMethod
         request.allHTTPHeaderFields = httpHeaders
         return request
