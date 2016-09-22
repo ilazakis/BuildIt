@@ -4,7 +4,7 @@ language: generic
 sudo: required
 osx_image: xcode8
 script:
-  - swift build
   - swift test
+  - xcodebuild -showBuildSettings 2>/dev/null | grep -i "^\s*PRODUCT_NAME" | sed -e 's/.*= \(.*\)/\1/'
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  bash <(curl -s https://raw.githubusercontent.com/codecov/codecov-bash/feature/swift/package_detection/codecov)
