@@ -122,6 +122,26 @@ class RequestBuilderTests: XCTestCase {
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
+    
+    // MARK: - Build from JSON tests
+    
+    func testGetJSON() {
+        
+        // GIVEN
+        let url = URL(string: "https://api.somehost.com/some/path")
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.setValue("text/html,application/xhtml+xml", forHTTPHeaderField: "Accept")
+        
+        // WHEN
+        //let json = String(contentsOfFile: "requests.json", encoding: .utf8)
+        let fixtureURL = URL(fileURLWithPath: "requests.json")
+        let data = try! Data(contentsOf: fixtureURL, options: [])
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let request = builder.json(json).build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
 
     // MARK: - Linux
     

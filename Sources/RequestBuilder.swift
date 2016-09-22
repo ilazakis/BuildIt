@@ -212,15 +212,30 @@ public class RequestBuilder {
 
 // MARK: - Extension(s)
 
+// MARK: - `HTTP method` `designated` method.
+
 fileprivate extension RequestBuilder {
 
     /// HTTP method setter helper.
     ///
+    /// This is the `designated` method that all the API `convenience`
+    /// methods (`GET()`, `POST()` etc) end up calling to set the
+    /// `HTTP method` on the built request.
+    ///
     /// - parameter httpMethod: The HTTP method.
     ///
-    /// - returns: The builder instnce.
+    /// - returns: The builder instance.
     fileprivate func method(_ httpMethod: HttpMethod) -> RequestBuilder {
         self.httpMethod = httpMethod.rawValue
+        return self
+    }
+}
+
+// MARK: - Build from JSON
+
+extension RequestBuilder {
+
+    public func json(_ : [String: Any]) -> RequestBuilder {
         return self
     }
 }
