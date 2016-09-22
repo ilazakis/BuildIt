@@ -1,7 +1,7 @@
 # BuildIt
 
 [![Build Status](https://travis-ci.org/ilazakis/BuildIt.svg?branch=master)](https://travis-ci.org/ilazakis/BuildIt)
-[![Twitter](https://img.shields.io/badge/twitter-buildit-blue.svg?style=flat)](http://twitter.com/cocoapoatterns)
+[![Twitter](https://img.shields.io/badge/twitter-buildit-blue.svg?style=flat)](http://twitter.com/cocoapatterns)
 
 
 [GOF's Builder](https://en.wikipedia.org/wiki/Builder_pattern) implementation for Cocoa's [URLRequest](https://developer.apple.com/reference/foundation/urlrequest) in Swift.
