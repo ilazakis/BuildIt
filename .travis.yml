@@ -5,7 +5,7 @@ osx_image: xcode8
 language: objective-c
 before_install:
   - export SWIFT_VERSION=swift-3.0-RELEASE
-  - curl -O https://swift.org/builds/$(SWIFT_VERSION)/xcode/$(SWIFT_VERSION)/$(SWIFT_VERSION)-osx.pkg
-  - sudo installer -pkg $(SWIFT_VERSION)-osx.pkg -target /
-  - export PATH=/Library/Developer/Toolchains/$(SWIFT_VERSION).xctoolchain/usr/bin:"${PATH}"
+  - curl -O https://swift.org/builds/$SWIFT_VERSION/xcode/$SWIFT_VERSION/$SWIFT_VERSION-osx.pkg
+  - sudo installer -pkg $SWIFT_VERSION-osx.pkg -target /
+  - export PATH=/Library/Developer/Toolchains/$SWIFT_VERSION.xctoolchain/usr/bin:"${PATH}"
 
