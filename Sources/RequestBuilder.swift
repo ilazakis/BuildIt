@@ -26,15 +26,15 @@ public class RequestBuilder {
     
     private var url: URL?
     
-    private var host: String?
+    fileprivate var host: String?
     
-    private var path: String?
+    fileprivate var path: String?
     
-    private var scheme = Scheme.https.rawValue
+    fileprivate var scheme = Scheme.https.rawValue
     
     fileprivate var httpMethod = HttpMethod.GET.rawValue
     
-    private var httpHeaders: [String: String] = [:]
+    fileprivate var httpHeaders: [String: String] = [:]
     
     private var queryItems: [URLQueryItem] = []
     
@@ -144,7 +144,6 @@ public class RequestBuilder {
     
     // MARK: - Host
     
-    
     /// The host subcomponent.
     ///
     /// - parameter name: The host name e.g. `api.somehost.com`
@@ -156,7 +155,6 @@ public class RequestBuilder {
     }
     
     // MARK: - Path
-    
     
     /// The path subcomponent.
     ///
@@ -235,7 +233,13 @@ fileprivate extension RequestBuilder {
 
 extension RequestBuilder {
 
-    public func json(_ : [String: Any]) -> RequestBuilder {
+    public func request(from jsonObject: [String: Any]) -> RequestBuilder {
+        if let requestDict = jsonObject["someRequest"] as? [String: Any] {
+            host = requestDict["host"] as? String
+            scheme = requestDict["scheme"] as? String ?? Scheme.https.rawValue
+            path = requestDict["path"] as? String
+            httpHeaders = requestDict["headers"] as? [String: String] ?? [:]
+        }
         return self
     }
 }

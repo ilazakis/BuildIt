@@ -8,12 +8,7 @@ class RequestBuilderTests: XCTestCase {
     
     let builder = RequestBuilder()
     
-    // MARK: - Setup
-    
-    override func setUp() {
-        super.setUp()
-        
-    }
+    // MARK: - Tests
     
     func testRequestDefaultsToGET() {
         
@@ -128,17 +123,19 @@ class RequestBuilderTests: XCTestCase {
     func testGetJSON() {
         
         // GIVEN
-        let url = URL(string: "https://api.somehost.com/some/path")
+        let url = URL(string: "https://api.somehost.com/some/path?query=queryValue&someOtherQuery=queryValue")
         var expectedRequest = URLRequest(url: url!)
         expectedRequest.setValue("text/html,application/xhtml+xml", forHTTPHeaderField: "Accept")
+        expectedRequest.setValue("en-IE", forHTTPHeaderField: "Accept-Language")
         
         // WHEN
-        //let json = String(contentsOfFile: "requests.json", encoding: .utf8)
-        let fixtureURL = URL(fileURLWithPath: "requests.json")
+        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
         let data = try! Data(contentsOf: fixtureURL, options: [])
         let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder.json(json).build()
-        
+        let request = builder
+                        .request(from: json)
+                        .query(name: "query", value: "queryValue")
+                        .query(name: "someOtherQuery", value: "queryValue").build()
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
@@ -147,7 +144,8 @@ class RequestBuilderTests: XCTestCase {
     
     static var allTests : [(String, (RequestBuilderTests) -> () throws -> Void)] {
         return [
-            ("testRequestDefaultsToGET", testRequestDefaultsToGET), ("testRequestPOST", testRequestPOST)
+            ("testRequestDefaultsToGET", testRequestDefaultsToGET),
+            ("testRequestPOST", testRequestPOST)
         ]
     }
 }

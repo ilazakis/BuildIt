@@ -1,0 +1,15 @@
+{
+	"someRequest": {
+		"scheme": "https",
+		"host": "api.somehost.com",
+		"path": "some/path",
+		"headers": {
+			"Accept": "text/html,application/xhtml+xml",
+			"Accept-Language": "en-IE"
+		},
+		"queries": {
+			"query": "$",
+			"someOtherQuery": "$"
+		}
+	}
+}
