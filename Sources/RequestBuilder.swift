@@ -36,7 +36,7 @@ public class RequestBuilder {
     
     fileprivate var httpHeaders: [String: String] = [:]
     
-    private var queryItems: [URLQueryItem] = []
+    fileprivate var queryItems: [URLQueryItem] = []
     
     // MARK: - Initialization
     
@@ -199,8 +199,8 @@ public class RequestBuilder {
         // Append any potential queries
         components?.queryItems = queryItems.isEmpty ? nil : queryItems
         
-        // By this point, we must have request.
-        guard let url = components?.url else { return nil }
+        // By this point, we must have request and a host.
+        guard let url = components?.url, components?.host != nil else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod
         request.allHTTPHeaderFields = httpHeaders
@@ -234,7 +234,7 @@ fileprivate extension RequestBuilder {
 extension RequestBuilder {
 
     private enum Keys: String {
-        case host, scheme, path, headers
+        case host, scheme, path, headers, queries, httpMethod
     }
     
     public func request(_ name: String, from jsonObject: [String: Any]) -> RequestBuilder {
@@ -242,7 +242,17 @@ extension RequestBuilder {
             host = requestDict[Keys.host.rawValue] as? String
             scheme = requestDict[Keys.scheme.rawValue] as? String ?? Scheme.https.rawValue
             path = requestDict[Keys.path.rawValue] as? String
+            httpMethod = requestDict[Keys.httpMethod.rawValue] as? String ?? HttpMethod.GET.rawValue
             httpHeaders = requestDict[Keys.headers.rawValue] as? [String: String] ?? [:]
+            
+            // Parse static queries, if any.
+            if let queries = requestDict[Keys.queries.rawValue] as? [[String: Any]] {
+                for queryDict in queries {
+                    guard let key = queryDict.keys.first else { break }
+                    let value = queryDict[key]
+                    queryItems.append(URLQueryItem(name: key, value: value as? String))
+                }
+            }
         }
         return self
     }

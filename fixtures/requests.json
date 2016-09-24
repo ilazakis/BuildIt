@@ -1,15 +1,20 @@
 {
-	"someRequest": {
+	"RequestGET": {
 		"scheme": "https",
 		"host": "api.somehost.com",
 		"path": "some/path",
 		"headers": {
 			"Accept": "text/html,application/xhtml+xml",
 			"Accept-Language": "en-IE"
-		},
-		"queries": {
-			"query": "$",
-			"someOtherQuery": "$"
 		}
+	},
+	"RequestPOST": {
+		"httpMethod": "POST",
+		"host": "api.somehost.com",
+		"path": "someResource",
+		"queries": [
+			{ "query": "5" },
+			{ "someOtherQuery": "queryValue" }
+		]
 	}
 }

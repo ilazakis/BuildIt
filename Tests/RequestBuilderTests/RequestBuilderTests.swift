@@ -123,7 +123,7 @@ class RequestBuilderTests: XCTestCase {
     func testGetJSON() {
         
         // GIVEN
-        let url = URL(string: "https://api.somehost.com/some/path?query=queryValue&someOtherQuery=queryValue")
+        let url = URL(string: "https://api.somehost.com/some/path")
         var expectedRequest = URLRequest(url: url!)
         expectedRequest.setValue("text/html,application/xhtml+xml", forHTTPHeaderField: "Accept")
         expectedRequest.setValue("en-IE", forHTTPHeaderField: "Accept-Language")
@@ -132,11 +132,42 @@ class RequestBuilderTests: XCTestCase {
         let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
         let data = try! Data(contentsOf: fixtureURL, options: [])
         let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder.request("someRequest", from: json)
-                        .query(name: "query", value: "queryValue")
-                        .query(name: "someOtherQuery", value: "queryValue").build()
+        let request = builder.request("RequestGET", from: json).build()
+        
         // THEN
         XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testPostJsonWithEmbeddedQueries() {
+        
+        // GIVEN
+        let url = URL(string: "https://api.somehost.com/someResource?query=5&someOtherQuery=queryValue")
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.httpMethod = "POST"
+        
+        // WHEN
+        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
+        let data = try! Data(contentsOf: fixtureURL, options: [])
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let request = builder.request("RequestPOST", from: json).build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testNonexistentRequestNameReturnsNil() {
+        
+        // GIVEN
+        let requestName = "RequestNameWhichIsNotInOurJsonFile"
+        
+        // WHEN
+        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
+        let data = try! Data(contentsOf: fixtureURL, options: [])
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        let request = builder.request(requestName, from: json).build()
+        
+        // THEN
+        XCTAssertNil(request)
     }
 
     // MARK: - Linux
