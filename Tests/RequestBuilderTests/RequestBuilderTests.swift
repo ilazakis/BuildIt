@@ -34,9 +34,22 @@ class RequestBuilderTests: XCTestCase {
         expectedRequest.httpMethod = "POST"
         
         // WHEN
-        let request = builder.POST()
-                        .url(url!)
-                        .build()
+        let request = builder.POST().http().host("apple.com").build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testRequestDELETE() {
+        
+        // GIVEN
+        let url = URL(string: "https://apple.com")
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.httpMethod = "DELETE"
+        
+        // WHEN
+        let request = builder.DELETE().host("apple.com").build()
+        
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
@@ -50,10 +63,8 @@ class RequestBuilderTests: XCTestCase {
         expectedRequest.setValue("Some token", forHTTPHeaderField: "Authorization")
         
         // WHEN
-        let request = builder.PUT()
-                        .url(url!)
-                        .setValue("Some token", for: "Authorization")
-                        .build()
+        let request = builder.PUT().https().url(url!)
+                        .setValue("Some token", for: "Authorization").build()
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
