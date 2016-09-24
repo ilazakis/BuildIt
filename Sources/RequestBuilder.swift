@@ -233,12 +233,16 @@ fileprivate extension RequestBuilder {
 
 extension RequestBuilder {
 
-    public func request(from jsonObject: [String: Any]) -> RequestBuilder {
-        if let requestDict = jsonObject["someRequest"] as? [String: Any] {
-            host = requestDict["host"] as? String
-            scheme = requestDict["scheme"] as? String ?? Scheme.https.rawValue
-            path = requestDict["path"] as? String
-            httpHeaders = requestDict["headers"] as? [String: String] ?? [:]
+    private enum Keys: String {
+        case host, scheme, path, headers
+    }
+    
+    public func request(_ name: String, from jsonObject: [String: Any]) -> RequestBuilder {
+        if let requestDict = jsonObject[name] as? [String: Any] {
+            host = requestDict[Keys.host.rawValue] as? String
+            scheme = requestDict[Keys.scheme.rawValue] as? String ?? Scheme.https.rawValue
+            path = requestDict[Keys.path.rawValue] as? String
+            httpHeaders = requestDict[Keys.headers.rawValue] as? [String: String] ?? [:]
         }
         return self
     }

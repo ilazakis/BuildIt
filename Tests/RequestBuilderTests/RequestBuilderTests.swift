@@ -132,8 +132,7 @@ class RequestBuilderTests: XCTestCase {
         let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
         let data = try! Data(contentsOf: fixtureURL, options: [])
         let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder
-                        .request(from: json)
+        let request = builder.request("someRequest", from: json)
                         .query(name: "query", value: "queryValue")
                         .query(name: "someOtherQuery", value: "queryValue").build()
         // THEN
