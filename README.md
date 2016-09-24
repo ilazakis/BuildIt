@@ -1,7 +1,7 @@
 # BuildIt
 
 [![Build Status](https://travis-ci.org/ilazakis/BuildIt.svg?branch=master)](https://travis-ci.org/ilazakis/BuildIt)
-[![Test Coverage](https://img.shields.io/codecov/c/github/ilazakis/BuildIt/travis.svg)](https://codecov.io/github/ilazakis/BuildIt)
+[![Test Coverage](https://codecov.io/gh/ilazakis/BuildIt/branch/master/graph/badge.svg)](https://codecov.io/gh/ilazakis/BuildIt)
 [![Twitter](https://img.shields.io/badge/twitter-buildit-blue.svg?style=flat)](http://twitter.com/cocoapatterns)
 
 
