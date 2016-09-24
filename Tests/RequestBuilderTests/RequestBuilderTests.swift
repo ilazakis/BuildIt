@@ -4,6 +4,9 @@ import Foundation
 
 class RequestBuilderTests: XCTestCase {
     
+    // MARK: - Fixture path(s)
+    let jsonFilePath = "./fixtures/requests.json"
+    
     // MARK: - SUT
     
     let builder = RequestBuilder()
@@ -129,10 +132,8 @@ class RequestBuilderTests: XCTestCase {
         expectedRequest.setValue("en-IE", forHTTPHeaderField: "Accept-Language")
         
         // WHEN
-        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
-        let data = try! Data(contentsOf: fixtureURL, options: [])
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder.request("RequestGET", from: json).build()
+        let fixture = json(at: jsonFilePath)
+        let request = builder.request("RequestGET", from: fixture).build()
         
         // THEN
         XCTAssertEqual(request, expectedRequest)
@@ -146,10 +147,8 @@ class RequestBuilderTests: XCTestCase {
         expectedRequest.httpMethod = "POST"
         
         // WHEN
-        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
-        let data = try! Data(contentsOf: fixtureURL, options: [])
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder.request("RequestPOST", from: json).build()
+        let fixture = json(at: jsonFilePath)
+        let request = builder.request("RequestPOST", from: fixture).build()
         
         // THEN
         XCTAssertEqual(request, expectedRequest)
@@ -161,15 +160,13 @@ class RequestBuilderTests: XCTestCase {
         let requestName = "RequestNameWhichIsNotInOurJsonFile"
         
         // WHEN
-        let fixtureURL = URL(fileURLWithPath: "./fixtures/requests.json")
-        let data = try! Data(contentsOf: fixtureURL, options: [])
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let request = builder.request(requestName, from: json).build()
+        let fixture = json(at: jsonFilePath)
+        let request = builder.request(requestName, from: fixture).build()
         
         // THEN
         XCTAssertNil(request)
     }
-
+    
     // MARK: - Linux
     
     static var allTests : [(String, (RequestBuilderTests) -> () throws -> Void)] {
@@ -177,5 +174,17 @@ class RequestBuilderTests: XCTestCase {
             ("testRequestDefaultsToGET", testRequestDefaultsToGET),
             ("testRequestPOST", testRequestPOST)
         ]
+    }
+}
+
+// MARK: - Helpers
+
+extension RequestBuilderTests {
+
+    func json(at path: String) -> [String: Any] {
+        let fixtureURL = URL(fileURLWithPath: path)
+        let data = try! Data(contentsOf: fixtureURL, options: [])
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+        return json
     }
 }
