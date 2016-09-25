@@ -14,23 +14,23 @@ Request builder leverages the [URLComponents](https://developer.apple.com/refere
 ### Plain GET
 `GET https://api.somehost.com/some/path/to/a/resource`
 
-```` 
+```swift 
 let path = "some/path/to/a/resource"
 let host = "api.somehost.com"
 let request = builder.GET().https().host(host).path(path).build()
-````
+```
 
 Actually, since `GET` and `https` are the default values for the HTTP method and scheme respectively, the above GET request can be written in an even less wordy way:
 
-````
+```swift
 let request = builder.host(host).path(path).build()
-````
+```
 
 ### What about queries?
 `GET https://api.somehost.com/some/path.json?name=joakim`
 
-````
+```swift
 let request = builder.host(host).path(path)
                      .query(name: "name", value: "joakim")
                      .build()
-````
+```
