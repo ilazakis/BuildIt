@@ -1,4 +1,4 @@
-# BuildIt
+![Buildit](https://raw.githubusercontent.com/ilazakis/BuildIt/assets/logo.png)
 
 [![Build Status](https://travis-ci.org/ilazakis/BuildIt.svg?branch=master)](https://travis-ci.org/ilazakis/BuildIt)
 [![Test Coverage](https://codecov.io/gh/ilazakis/BuildIt/branch/master/graph/badge.svg)](https://codecov.io/gh/ilazakis/BuildIt)
