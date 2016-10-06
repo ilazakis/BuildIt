@@ -7,94 +7,135 @@ class RequestBuilderTests: XCTestCase {
     // MARK: - Fixture path(s)
     let jsonFilePath = "./fixtures/requests.json"
     
-    // MARK: - SUT
+    // MARK: - Requests stub values
+    let host = "api.github.com"
+    let path = "user/repos"
+    let urlString = "https://api.github.com"
+    let url = URL(string: "https://api.github.com")
     
+    let urlWithPath = URL(string: "https://api.github.com/user/repos")
+    let urlWithEmptyQuery = URL(string: "https://api.github.com/user/repos?page=")
+    let urlWithPathAndQueries = URL(string: "https://api.github.com/user/repos?page=2&per_page=100")
+    let query1Key = "page"
+    let query1Value = "2"
+    let query2Key = "per_page"
+    let query2Value = "100"
+    
+    let header1Key = "User-Agent"
+    let header1Value = "Some user agent"
+    
+    let PUT = "PUT"
+    let POST = "POST"
+    let DELETE = "DELETE"
+    
+    // MARK: - SUT
     let builder = RequestBuilder()
     
     // MARK: - Tests
     
-    func testRequestDefaultsToGET() {
+    func test_UsingUrl_ImplicitGET_ImplicitHttps() {
         
         // GIVEN
-        let url = URL(string: "http://apple.com")
         let expectedRequest = URLRequest(url: url!)
         
         // WHEN
-        let request = builder.url(url!).build()
+        let request = builder
+            .url(url!)
+            .build()
         
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
     
-    func testRequestPOST() {
+    func test_UsingUrl_ExplicitGET_ExplicitHttps() {
         
         // GIVEN
-        let url = URL(string: "http://apple.com")
-        var expectedRequest = URLRequest(url: url!)
-        expectedRequest.httpMethod = "POST"
+        let expectedRequest = URLRequest(url: url!)
         
         // WHEN
-        let request = builder.POST().http().host("apple.com").build()
+        let request = builder
+            .GET()
+            .https()
+            .url(url!)
+            .build()
         
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
     
-    func testRequestDELETE() {
+    func test_UsingHost_POST_ImplicitHttps() {
         
         // GIVEN
-        let url = URL(string: "https://apple.com")
         var expectedRequest = URLRequest(url: url!)
-        expectedRequest.httpMethod = "DELETE"
+        expectedRequest.httpMethod = POST
         
         // WHEN
-        let request = builder.DELETE().host("apple.com").build()
+        let request = builder
+            .POST()
+            .host(host)
+            .build()
         
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
     
-    func testRequestPUTAndHeaders() {
+    func test_UsingHost_DELETE() {
         
         // GIVEN
-        let url = URL(string: "https://apple.com")
         var expectedRequest = URLRequest(url: url!)
-        expectedRequest.httpMethod = "PUT"
-        expectedRequest.setValue("Some token", forHTTPHeaderField: "Authorization")
+        expectedRequest.httpMethod = DELETE
         
         // WHEN
-        let request = builder.PUT().https().url(url!)
-                        .setValue("Some token", for: "Authorization").build()
+        let request = builder
+            .DELETE()
+            .host(host)
+            .build()
+        
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
     
-    func testRequestGETWithHeadersAndQueries() {
+    func test_UsingUrl_PUT_Headers() {
         
         // GIVEN
-        let url = URL(string: "http://api.somehost.com/user_timeline.json?screen_name=cocoapatterns&include_rts=true")
         var expectedRequest = URLRequest(url: url!)
-        expectedRequest.setValue("Some token", forHTTPHeaderField: "Authorization")
+        expectedRequest.httpMethod = PUT
+        expectedRequest.setValue(header1Value, forHTTPHeaderField: header1Key)
         
         // WHEN
-        let request = builder.GET()
-                        .url(URL(string: "http://api.somehost.com/user_timeline.json")!)
-                        .setValue("Some token", for: "Authorization")
-                        .query(name: "screen_name", value: "cocoapatterns")
-                        .query(name: "include_rts", value: "true")
-                        .build()
+        let request = builder.PUT().url(url!)
+            .setValue(header1Value, for: header1Key)
+            .build()
+        
         // THEN
         XCTAssertEqual(request, expectedRequest)
     }
     
-    func testRequestGETWithEmptyQuery() {
+    func test_UsingHostAndPath_ImplicitGET_Headers_Queries() {
+        
+        // GIVEN
+        var expectedRequest = URLRequest(url: urlWithPathAndQueries!)
+        expectedRequest.setValue(header1Value, forHTTPHeaderField: header1Key)
+        
+        // WHEN
+        let request = builder.host(host).path(path)
+            .setValue(header1Value, for: header1Key)
+            .query(name: query1Key, value: query1Value)
+            .query(name: query2Key, value: query2Value)
+            .build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func test_UsingUrl_ImplicitGET_EmptyQuery() {
         
         // GIVEN
         let url = URL(string: "http://api.somehost.com/test.json?someQuery=")
         let expectedRequest = URLRequest(url: url!)
     
         // WHEN
-        let request = builder.GET()
+        let request = builder
                         .url(URL(string: "http://api.somehost.com/test.json")!)
                         .query(name: "someQuery", value: "")
                         .build()
@@ -182,8 +223,8 @@ class RequestBuilderTests: XCTestCase {
     
     static var allTests : [(String, (RequestBuilderTests) -> () throws -> Void)] {
         return [
-            ("testRequestDefaultsToGET", testRequestDefaultsToGET),
-            ("testRequestPOST", testRequestPOST)
+           // ("testRequestUsingUrlGetImplicit", testRequestUsingUrlGetImplicit),
+           // ("testRequestUsingUrlGetExplicit", testRequestUsingUrlGetExplicit)
         ]
     }
 }
