@@ -4,6 +4,6 @@ rm -rf /private/tmp/fixtures # copy fixtures/resources to make available to test
 cp -r fixtures /private/tmp
 swift package generate-xcodeproj
 xcodebuild \
-	-scheme RequestBuilder \
+	-scheme Buildit \
 	-enableCodeCoverage YES \
 	test

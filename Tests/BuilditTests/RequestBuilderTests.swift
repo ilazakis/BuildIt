@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import RequestBuilder
+@testable import Buildit
 
 class RequestBuilderTests: XCTestCase {
     
