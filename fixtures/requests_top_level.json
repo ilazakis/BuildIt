@@ -1,0 +1,21 @@
+{
+	"host": "api.github.com",
+    "path": "user/repos",
+    "headers": {
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "Some-User-Agent"
+    },
+    "ReposGET": {
+		"path": "user/repos",
+        "queries": [
+            { "page": "2" },
+            { "per_page": "100" }
+        ]
+	},
+	"ReposPOST": {
+        "httpMethod": "POST",
+        "headers": {
+            "Time-Zone": "Europe/Berlin"
+        }
+    }
+}

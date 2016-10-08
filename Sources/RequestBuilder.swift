@@ -238,22 +238,58 @@ extension RequestBuilder {
     }
     
     public func request(_ name: String, from jsonObject: [String: Any]) -> RequestBuilder {
-        if let requestDict = jsonObject[name] as? [String: Any] {
-            host = requestDict[Keys.host.rawValue] as? String
-            scheme = requestDict[Keys.scheme.rawValue] as? String ?? Scheme.https.rawValue
-            path = requestDict[Keys.path.rawValue] as? String
-            httpMethod = requestDict[Keys.httpMethod.rawValue] as? String ?? HttpMethod.GET.rawValue
-            httpHeaders = requestDict[Keys.headers.rawValue] as? [String: String] ?? [:]
-            
-            // Parse static queries, if any.
-            if let queries = requestDict[Keys.queries.rawValue] as? [[String: Any]] {
-                for queryDict in queries {
-                    guard let key = queryDict.keys.first else { break }
-                    let value = queryDict[key]
-                    queryItems.append(URLQueryItem(name: key, value: value as? String))
-                }
-            }
-        }
+        parseComponents(from: jsonObject, for: name)
         return self
+    }
+    
+    private func parseComponents(from jsonObject: [String: Any]) {
+        host = parseHost(from: jsonObject) ?? host
+        path = parsePath(from: jsonObject) ?? path
+        scheme = parseScheme(from: jsonObject)
+        httpMethod = parseMethod(from: jsonObject)
+        queryItems = parseQueries(from: jsonObject)
+        
+        let headers = parseHeaders(from: jsonObject)
+        for (key, value) in headers {
+            _ = setValue(value, for: key)
+        }
+    }
+    
+    private func parseComponents(from jsonObject: [String: Any], for requestIdentifier: String) {
+        parseComponents(from: jsonObject) // "top level / common" components
+        guard let requestDict = jsonObject[requestIdentifier] as? [String: Any] else { return }
+        parseComponents(from: requestDict) // request specific overrides
+    }
+    
+    private func parseHost(from jsonObject: [String: Any]) -> String? {
+        return jsonObject[Keys.host.rawValue] as? String
+    }
+    
+    private func parsePath(from jsonObject: [String: Any]) -> String? {
+        return jsonObject[Keys.path.rawValue] as? String
+    }
+    
+    private func parseScheme(from jsonObject: [String: Any]) -> String {
+        return jsonObject[Keys.scheme.rawValue] as? String ?? Scheme.https.rawValue
+    }
+    
+    private func parseMethod(from jsonObject: [String: Any]) -> String {
+        return jsonObject[Keys.httpMethod.rawValue] as? String ?? HttpMethod.GET.rawValue
+    }
+    
+    private func parseQueries(from jsonObject: [String: Any]) -> [URLQueryItem] {
+        guard let queriesDict = jsonObject[Keys.queries.rawValue] as? [[String: Any]] else { return [] }
+        
+        var queries: [URLQueryItem] = []
+        for queryDict in queriesDict {
+            guard let key = queryDict.keys.first else { break }
+            let value = queryDict[key]
+            queries.append(URLQueryItem(name: key, value: value as? String))
+        }
+        return queries
+    }
+
+    private func parseHeaders(from jsonObject: [String: Any]) -> [String: String] {
+        return jsonObject[Keys.headers.rawValue] as? [String: String] ?? [:]
     }
 }

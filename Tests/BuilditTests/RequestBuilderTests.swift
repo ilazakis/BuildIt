@@ -6,20 +6,24 @@ class RequestBuilderTests: XCTestCase {
     
     // MARK: - Fixture path(s)
     let jsonFilePath = "./fixtures/requests.json"
+    let jsonTopLevelFilePath = "./fixtures/requests_top_level.json"
     
     // MARK: - Requests stub values
     let host = "api.github.com"
     let path = "user/repos"
+    let pathWithForwardSlash = "/user/repos"
     let urlString = "https://api.github.com"
     let url = URL(string: "https://api.github.com")
     
     let urlWithPath = URL(string: "https://api.github.com/user/repos")
     let urlWithEmptyQuery = URL(string: "https://api.github.com/user/repos?page=")
     let urlWithPathAndQueries = URL(string: "https://api.github.com/user/repos?page=2&per_page=100")
+    let urlNonSecureWithPathAndQueries = URL(string: "http://api.github.com/user/repos?page=2&per_page=100")
     let query1Key = "page"
     let query1Value = "2"
     let query2Key = "per_page"
     let query2Value = "100"
+    
     
     let header1Key = "User-Agent"
     let header1Value = "Some user agent"
@@ -128,6 +132,24 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertEqual(request, expectedRequest)
     }
     
+    func test_NonSecureHTTP_UsingHostAndPath_ImplicitGET_Headers_Queries() {
+        
+        // GIVEN
+        var expectedRequest = URLRequest(url: urlNonSecureWithPathAndQueries!)
+        expectedRequest.setValue(header1Value, forHTTPHeaderField: header1Key)
+        
+        // WHEN
+        let request = builder.http().host(host).path(pathWithForwardSlash)
+            .setValue(header1Value, for: header1Key)
+            .query(name: query1Key, value: query1Value)
+            .query(name: query2Key, value: query2Value)
+            .build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+
+    
     func test_UsingUrl_ImplicitGET_EmptyQuery() {
         
         // GIVEN
@@ -217,6 +239,41 @@ class RequestBuilderTests: XCTestCase {
         
         // THEN
         XCTAssertNil(request)
+    }
+    
+    func test_UsingTopLevelJson_ReposGET() {
+        
+        // GIVEN
+        let requestName = "ReposGET"
+        var expectedRequest = URLRequest(url: urlWithPathAndQueries!)
+        expectedRequest.setValue("Some-User-Agent", forHTTPHeaderField: "User-Agent")
+        expectedRequest.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
+        
+        // WHEN
+        let fixture = json(at: jsonTopLevelFilePath)
+        let request = builder.request(requestName, from: fixture).build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func test_UsingTopLevelJson_ReposPOST() {
+        
+        // GIVEN
+        let requestName = "ReposPOST"
+        var expectedRequest = URLRequest(url: urlWithPath!)
+        expectedRequest.httpMethod = "POST"
+        expectedRequest.setValue("Some-User-Agent", forHTTPHeaderField: "User-Agent")
+        expectedRequest.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
+        expectedRequest.setValue("Europe/Berlin", forHTTPHeaderField: "Time-Zone")
+        
+        
+        // WHEN
+        let fixture = json(at: jsonTopLevelFilePath)
+        let request = builder.request(requestName, from: fixture).build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
     }
     
     // MARK: - Linux
