@@ -6,5 +6,7 @@ osx_image: xcode8
 script:
   - chmod ugo+x run-tests.sh
   - ./run-tests.sh
+ignore:
+  - "Tests/*"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
