@@ -5,9 +5,7 @@
 [![Twitter](https://img.shields.io/badge/twitter-buildit-blue.svg?style=flat)](http://twitter.com/cocoapatterns)
 
 
-Hassle-free and [URLRequest](https://developer.apple.com/reference/foundation/urlrequest) implementation for your REST endpoints (or any other use).
-
-Request builder leverages the [URLComponents](https://developer.apple.com/reference/foundation/urlcomponents) structure and exposes a lightweight and easy to use API for URLRequest construction.
+Hassle-free and concise [URLRequest](https://developer.apple.com/reference/foundation/urlrequest) implementation for your REST endpoints (or any other use) through a lightweight and easy to use API.
 
 - [Features](#features)
 - [Examples](#examples)
