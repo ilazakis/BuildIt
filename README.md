@@ -8,7 +8,7 @@
 Hassle-free and concise [URLRequest](https://developer.apple.com/reference/foundation/urlrequest) implementation for your REST endpoints (or any other use) through a lightweight and easy to use API.
 
 - [Features](#features)
-- [Examples](#examples)
+- [Usage](#usage)
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [Communication](#communication)
@@ -17,7 +17,7 @@ Hassle-free and concise [URLRequest](https://developer.apple.com/reference/found
 - [x] Expressive, consice request construction.
 - [x] *JSON* -> *URLRequest*. Write your endpoint definitions in *JSON* config files, no need to repeat yourself all over your codebase.
 
-## Examples
+## Usage
 
 #### Using a *JSON* file for endpoint definitions
 
@@ -40,7 +40,7 @@ The main reason you are reading this. Define your endpoints in *JSON* files inst
 all you need to generate your request is the name of the request as defined in the *JSON* file ("ReposPOST") and the name of the *JSON* file itself:
 
 ```swift 
-let request = builder.request("ReposGET", from: "json_filename").build()
+let request = builder.request("ReposPOST", from: "json_filename").build()
 ````
 
 That's the equivalent of doing:
@@ -87,7 +87,7 @@ Place all common *URL* components as top-level entries in your *JSON* file:
 
 #### TODO: Dynamic values (queries, headers, body)
 
-#### Plain GET
+#### Without *JSON*
 `GET https://api.somehost.com/some/path/to/a/resource`
 
 ```swift 
