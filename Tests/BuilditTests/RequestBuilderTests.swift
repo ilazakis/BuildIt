@@ -24,6 +24,7 @@ class RequestBuilderTests: XCTestCase {
     let query2Key = "per_page"
     let query2Value = "100"
     
+    let bodyDictionary: [String: Any] = ["somekey" : "some value", "some other key" : 5]
     
     let header1Key = "User-Agent"
     let header1Value = "Some user agent"

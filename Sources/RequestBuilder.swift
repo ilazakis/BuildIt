@@ -218,6 +218,9 @@ public class RequestBuilder {
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod
         request.allHTTPHeaderFields = httpHeaders
+        if body != nil {
+            request.httpBody = body
+        }
         return request
     }
 }
