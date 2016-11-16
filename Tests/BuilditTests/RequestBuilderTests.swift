@@ -99,6 +99,25 @@ class RequestBuilderTests: XCTestCase {
         XCTAssertEqual(request, expectedRequest)
     }
     
+    func test_UsingHost_POST_ImplicitHttps_Body() {
+        
+        // GIVEN
+        var expectedRequest = URLRequest(url: url!)
+        expectedRequest.httpMethod = POST
+        let body = try! JSONSerialization.data(withJSONObject: bodyDictionary)
+        expectedRequest.httpBody = body
+        
+        // WHEN
+        let request = builder
+            .POST()
+            .host(host)
+            .body(body)
+            .build()
+        
+        // THEN
+        XCTAssertEqual(request, expectedRequest)
+    }
+    
     func test_UsingUrl_PUT_Headers() {
         
         // GIVEN

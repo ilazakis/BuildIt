@@ -30,6 +30,8 @@ public class RequestBuilder {
     
     fileprivate var path: String?
     
+    fileprivate var body: Data?
+    
     fileprivate var scheme = Scheme.https.rawValue
     
     fileprivate var httpMethod = HttpMethod.GET.rawValue
@@ -166,6 +168,18 @@ public class RequestBuilder {
     /// - returns: The builder instance.
     public func path(_ name: String) -> RequestBuilder {
         path = name
+        return self
+    }
+    
+    // MARK: - Body
+    
+    /// Adds the request's body.
+    ///
+    /// - parameter body: The body payload.
+    ///
+    /// - returns: The builder instance.
+    public func body(_ body: Data) -> RequestBuilder {
+        self.body = body
         return self
     }
     
